@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, ReactElement } from 'react';
+import React, { useContext, useEffect, lazy, Suspense } from 'react';
 import { Store, IEpisode, ActionTypes } from '../../store';
+
+const EpisodeList = lazy<any>(() => import('../episode-list/EpisodeList'));
 
 export const App = (): JSX.Element => {
   const [{ episodes, favorites }, dispatch] = useContext(Store);
@@ -30,32 +32,20 @@ export const App = (): JSX.Element => {
     dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
   };
 
-  console.log(`render`, favorites);
-
   return (
     <>
       <header className="header">
-        <h1>Rick and Morty</h1>
-        <p>Pick your favorite episode!!!</p>
+        <div>
+          <h1>Rick and Morty</h1>
+          <p>Pick your favorite episode!!!</p>
+        </div>
+        <div>Favorite(s): {favorites.length}</div>
       </header>
-      <section className="episode-layout">
-        {episodes.map(
-          ({ id, image, name, season, number }: IEpisode): ReactElement => (
-            <section key={id} className="episode-box">
-              <img src={image.medium} alt={`Rick and Morty ${name}`} />
-              <p>name</p>
-              <section>
-                <div>
-                  Season: {season} Number: {number}
-                </div>
-                <button type="button" onClick={() => toggleFavAction(id)}>
-                  {favorites.find((fav: IEpisode) => fav.id === id) ? 'UnFav' : 'Fav'}
-                </button>
-              </section>
-            </section>
-          ),
-        )}
-      </section>
+      <Suspense fallback={<div>Loading...</div>}>
+        <section className="episode-layout">
+          <EpisodeList episodes={episodes} favorites={favorites} toggleFavAction={toggleFavAction} />
+        </section>
+      </Suspense>
     </>
   );
 };
