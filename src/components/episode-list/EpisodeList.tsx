@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { IEpisode } from '../../store';
 
-interface EpisodeListProps {
+export interface EpisodeListProps {
   episodes: IEpisode[];
   favorites: IEpisode[];
   toggleFavAction: (id: number) => void;
