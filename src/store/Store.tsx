@@ -29,7 +29,12 @@ interface IAddFavAction {
   payload: IEpisode;
 }
 
-type Action = IFetchAction | IAddFavAction;
+interface IRemoveFavAction {
+  type: ActionTypes.REMOVE_FAV;
+  payload: IEpisode[];
+}
+
+type Action = IFetchAction | IAddFavAction | IRemoveFavAction;
 
 const reducer = (state: IState, action: Action): IState => {
   switch (action.type) {
@@ -38,6 +43,10 @@ const reducer = (state: IState, action: Action): IState => {
 
     case ActionTypes.ADD_FAV:
       return { ...state, favorites: [...state.favorites, action.payload] };
+
+    case ActionTypes.REMOVE_FAV:
+      console.log(`action.payload`, action.payload);
+      return { ...state, favorites: [...action.payload] };
 
     default:
       return state;

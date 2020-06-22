@@ -15,10 +15,22 @@ export const App = (): JSX.Element => {
 
   const toggleFavAction = (id: number): void => {
     const favEpisode = episodes.find((episode: IEpisode): boolean => id === episode.id);
+    let inFavEpisode = false;
+
+    if (favEpisode) {
+      inFavEpisode = favorites.includes(favEpisode);
+    }
+
+    if (inFavEpisode) {
+      const episodesWithoutFav = favorites.filter((favEpisode: IEpisode): boolean => favEpisode.id !== id);
+      dispatch({ type: ActionTypes.REMOVE_FAV, payload: episodesWithoutFav });
+      return;
+    }
+
     dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
   };
 
-  console.log(favorites);
+  console.log(`render`, favorites);
 
   return (
     <>
@@ -37,7 +49,7 @@ export const App = (): JSX.Element => {
                   Season: {season} Number: {number}
                 </div>
                 <button type="button" onClick={() => toggleFavAction(id)}>
-                  Fav
+                  {favorites.find((fav: IEpisode) => fav.id === id) ? 'UnFav' : 'Fav'}
                 </button>
               </section>
             </section>
