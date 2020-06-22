@@ -1,7 +1,7 @@
 import React, { createContext, ReactElement, ReactChildren, useReducer, Reducer, Dispatch } from 'react';
 
 interface IState {
-  episodes: [];
+  episodes: IEpisode[];
   favorites: [];
 }
 
@@ -10,12 +10,18 @@ const initialState: IState = {
   favorites: [],
 };
 
-interface IAction {
-  type: string;
-  payload?: any;
+export interface IEpisode {
+  id: number;
+  image: { medium: string };
+  name: string;
+  season: number;
+  number: number;
 }
 
-type MyReducer = Reducer<IState, IAction> | Dispatch<IAction>;
+interface IAction {
+  type: string;
+  payload: IEpisode[];
+}
 
 const reducer = (state: IState, action: IAction): IState => {
   switch (action.type) {
@@ -27,18 +33,17 @@ const reducer = (state: IState, action: IAction): IState => {
   }
 };
 
-type IStore = [IState, MyReducer];
+type InitialStore = [IState, Function];
+type Store = [IState, Dispatch<IAction>];
 
-const initialStore: IStore = [initialState, reducer];
-
-export const Store = createContext<IStore>(initialStore);
+export const Store = createContext<InitialStore>([initialState, reducer]);
 
 interface IStoreProviderProps {
   children: ReactElement | ReactChildren;
 }
 
 export const StoreProvider = ({ children }: IStoreProviderProps): JSX.Element => {
-  const value = useReducer<Reducer<IState, IAction>>(reducer, initialState);
+  const value: Store = useReducer<Reducer<IState, IAction>>(reducer, initialState);
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
 };
