@@ -1,8 +1,9 @@
 import React, { createContext, ReactElement, ReactChildren, useReducer, Reducer, Dispatch } from 'react';
+import { ActionTypes } from './types';
 
 interface IState {
   episodes: IEpisode[];
-  favorites: [];
+  favorites: IEpisode[];
 }
 
 const initialState: IState = {
@@ -18,15 +19,25 @@ export interface IEpisode {
   number: number;
 }
 
-interface IAction {
-  type: string;
+interface IFetchAction {
+  type: ActionTypes.FETCH_DATA;
   payload: IEpisode[];
 }
 
-const reducer = (state: IState, action: IAction): IState => {
+interface IAddFavAction {
+  type: ActionTypes.ADD_FAV;
+  payload: IEpisode;
+}
+
+type Action = IFetchAction | IAddFavAction;
+
+const reducer = (state: IState, action: Action): IState => {
   switch (action.type) {
-    case 'FETCH_DATA':
+    case ActionTypes.FETCH_DATA:
       return { ...state, episodes: action.payload };
+
+    case ActionTypes.ADD_FAV:
+      return { ...state, favorites: [...state.favorites, action.payload] };
 
     default:
       return state;
@@ -34,7 +45,7 @@ const reducer = (state: IState, action: IAction): IState => {
 };
 
 type InitialStore = [IState, Function];
-type Store = [IState, Dispatch<IAction>];
+type Store = [IState, Dispatch<Action>];
 
 export const Store = createContext<InitialStore>([initialState, reducer]);
 
@@ -43,7 +54,7 @@ interface IStoreProviderProps {
 }
 
 export const StoreProvider = ({ children }: IStoreProviderProps): JSX.Element => {
-  const value: Store = useReducer<Reducer<IState, IAction>>(reducer, initialState);
+  const value: Store = useReducer<Reducer<IState, Action>>(reducer, initialState);
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
 };

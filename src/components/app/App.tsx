@@ -1,17 +1,24 @@
 import React, { useContext, useEffect, ReactElement } from 'react';
-import { Store, IEpisode } from '../../store';
+import { Store, IEpisode, ActionTypes } from '../../store';
 
 export const App = (): JSX.Element => {
-  const [{ episodes }, dispatch] = useContext(Store);
+  const [{ episodes, favorites }, dispatch] = useContext(Store);
 
   useEffect(() => {
     const fetchDataAction = async () => {
       const data = await fetch('https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes');
       const dataJSON = await data.json();
-      dispatch({ type: 'FETCH_DATA', payload: dataJSON._embedded.episodes });
+      dispatch({ type: ActionTypes.FETCH_DATA, payload: dataJSON._embedded.episodes });
     };
     episodes.length === 0 && fetchDataAction();
   }, [episodes.length, dispatch]);
+
+  const toggleFavAction = (id: number): void => {
+    const favEpisode = episodes.find((episode: IEpisode): boolean => id === episode.id);
+    dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
+  };
+
+  console.log(favorites);
 
   return (
     <>
@@ -26,7 +33,12 @@ export const App = (): JSX.Element => {
               <img src={image.medium} alt={`Rick and Morty ${name}`} />
               <p>name</p>
               <section>
-                Season: {season} Number: {number}
+                <div>
+                  Season: {season} Number: {number}
+                </div>
+                <button type="button" onClick={() => toggleFavAction(id)}>
+                  Fav
+                </button>
               </section>
             </section>
           ),
