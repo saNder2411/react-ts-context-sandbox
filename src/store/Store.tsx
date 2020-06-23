@@ -1,5 +1,6 @@
 import React, { createContext, ReactElement, ReactChildren, useReducer, Reducer, Dispatch } from 'react';
-import { ActionTypes } from './types';
+import { reducer } from './';
+import { Action, IEpisode } from './types';
 
 export interface IState {
   episodes: IEpisode[];
@@ -10,51 +11,9 @@ const initialState: IState = {
   episodes: [],
   favorites: [],
 };
-
-export interface IEpisode {
-  id: number;
-  image: { medium: string };
-  name: string;
-  season: number;
-  number: number;
-}
-
-interface IFetchAction {
-  type: ActionTypes.FETCH_DATA;
-  payload: IEpisode[];
-}
-
-interface IAddFavAction {
-  type: ActionTypes.ADD_FAV;
-  payload: IEpisode;
-}
-
-interface IRemoveFavAction {
-  type: ActionTypes.REMOVE_FAV;
-  payload: IEpisode[];
-}
-
-type Action = IFetchAction | IAddFavAction | IRemoveFavAction;
-
-const reducer = (state: IState, action: Action): IState => {
-  switch (action.type) {
-    case ActionTypes.FETCH_DATA:
-      return { ...state, episodes: action.payload };
-
-    case ActionTypes.ADD_FAV:
-      return { ...state, favorites: [...state.favorites, action.payload] };
-
-    case ActionTypes.REMOVE_FAV:
-      console.log(`action.payload`, action.payload);
-      return { ...state, favorites: [...action.payload] };
-
-    default:
-      return state;
-  }
-};
-
+export type TDispatch = Dispatch<Action> | Function;
 type TInitialStore = [IState, Function];
-export type TStore = [IState, Dispatch<Action> | Function];
+export type TStore = [IState, TDispatch];
 
 export const Store = createContext<TInitialStore>([initialState, reducer]);
 

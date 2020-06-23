@@ -4,10 +4,10 @@ import { IEpisode } from '../../store';
 export interface EpisodeListProps {
   episodes: IEpisode[];
   favorites: IEpisode[];
-  toggleFavAction: (id: number) => void;
+  onToggleFavClick: (id: number) => void;
 }
 
-const EpisodeList = ({ episodes, favorites, toggleFavAction }: EpisodeListProps): Array<JSX.Element> => {
+const EpisodeList = ({ episodes, favorites, onToggleFavClick }: EpisodeListProps): Array<JSX.Element> => {
   return episodes.map(
     ({ id, image, name, season, number }: IEpisode): ReactElement => (
       <section key={id} className="episode-box">
@@ -17,7 +17,7 @@ const EpisodeList = ({ episodes, favorites, toggleFavAction }: EpisodeListProps)
           <div>
             Season: {season} Number: {number}
           </div>
-          <button type="button" onClick={() => toggleFavAction(id)}>
+          <button type="button" onClick={() => onToggleFavClick(id)}>
             {favorites.find((fav: IEpisode) => fav.id === id) ? 'UnFav' : 'Fav'}
           </button>
         </section>

@@ -1,13 +1,13 @@
-import React, { Fragment, ReactElement, ReactChildren, useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Store } from '../../store';
 import { Link } from '@reach/router';
 
 interface IAppProps {
-  children: ReactElement & ReactChildren;
+  children: JSX.Element[];
   path: string;
 }
 
-export const App = ({ children }: any): JSX.Element => {
+export const App = ({ children }: IAppProps): JSX.Element => {
   const [{ favorites }] = useContext(Store);
 
   return (
