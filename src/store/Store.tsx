@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, ReactChildren, useReducer, Reducer, Dispatch } from 'react';
+import React, { createContext, useReducer, Reducer, Dispatch } from 'react';
 import { reducer } from './';
 import { Action, IEpisode } from './types';
 
@@ -17,11 +17,7 @@ export type TStore = [IState, TDispatch];
 
 export const Store = createContext<TInitialStore>([initialState, reducer]);
 
-interface IStoreProviderProps {
-  children: ReactElement | ReactChildren;
-}
-
-export const StoreProvider = ({ children }: IStoreProviderProps): JSX.Element => {
+export const StoreProvider = ({ children }: JSX.ElementChildrenAttribute): JSX.Element => {
   const value: TStore = useReducer<Reducer<IState, Action>>(reducer, initialState);
 
   return <Store.Provider value={value}>{children}</Store.Provider>;

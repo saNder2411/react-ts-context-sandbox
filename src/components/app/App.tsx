@@ -18,8 +18,7 @@ export const App = ({ children }: IAppProps): JSX.Element => {
           <p>Pick your favorite episode!!!</p>
         </div>
         <div>
-          <Link to="/">Home</Link>
-          <Link to="/faves">Favorite(s): {favorites.length}</Link>
+          <Link to="/">Home</Link> <Link to="/faves">Favorite(s): {favorites.length}</Link>
         </div>
       </header>
       {children}
