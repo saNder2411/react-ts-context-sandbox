@@ -1,18 +1,12 @@
-import React, { useEffect, lazy, Suspense, useContext } from 'react';
-import { Store, IEpisode, ActionTypes } from '../store';
+import React, { lazy, Suspense, useState } from 'react';
+import { IEpisode, ActionTypes } from '../store';
+import { useFetch } from '../hooks';
 
 const EpisodeList = lazy<any>(() => import('../components/episode-list/EpisodeList'));
 
 export const HomePage = () => {
-  const [{ episodes, favorites }, dispatch] = useContext(Store);
-  useEffect(() => {
-    const fetchDataAction = async () => {
-      const data = await fetch('https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes');
-      const dataJSON = await data.json();
-      dispatch({ type: ActionTypes.FETCH_DATA, payload: dataJSON._embedded.episodes });
-    };
-    episodes.length === 0 && fetchDataAction();
-  }, [episodes.length, dispatch]);
+  const [url] = useState('https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes');
+  const [{ episodes, favorites }, dispatch] = useFetch(url);
 
   const toggleFavAction = (id: number): void => {
     const favEpisode = episodes.find((episode: IEpisode): boolean => id === episode.id);
@@ -28,7 +22,9 @@ export const HomePage = () => {
       return;
     }
 
-    dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
+    if (favEpisode) {
+      dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
+    }
   };
 
   return (

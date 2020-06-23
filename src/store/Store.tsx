@@ -1,7 +1,7 @@
 import React, { createContext, ReactElement, ReactChildren, useReducer, Reducer, Dispatch } from 'react';
 import { ActionTypes } from './types';
 
-interface IState {
+export interface IState {
   episodes: IEpisode[];
   favorites: IEpisode[];
 }
@@ -53,17 +53,17 @@ const reducer = (state: IState, action: Action): IState => {
   }
 };
 
-type InitialStore = [IState, Function];
-type Store = [IState, Dispatch<Action>];
+type TInitialStore = [IState, Function];
+export type TStore = [IState, Dispatch<Action> | Function];
 
-export const Store = createContext<InitialStore>([initialState, reducer]);
+export const Store = createContext<TInitialStore>([initialState, reducer]);
 
 interface IStoreProviderProps {
   children: ReactElement | ReactChildren;
 }
 
 export const StoreProvider = ({ children }: IStoreProviderProps): JSX.Element => {
-  const value: Store = useReducer<Reducer<IState, Action>>(reducer, initialState);
+  const value: TStore = useReducer<Reducer<IState, Action>>(reducer, initialState);
 
   return <Store.Provider value={value}>{children}</Store.Provider>;
 };
