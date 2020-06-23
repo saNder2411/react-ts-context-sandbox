@@ -8,12 +8,8 @@ export const fetchDataActions = async (url: string, dispatch: TDispatch) => {
 };
 
 export const toggleFavAction = ([{ episodes, favorites }, dispatch]: TStore) => (id: number): void => {
-  const favEpisode = episodes.find((episode: IEpisode): boolean => id === episode.id);
-  let inFavEpisode = false;
-
-  if (favEpisode) {
-    inFavEpisode = favorites.includes(favEpisode);
-  }
+  const favEpisode = episodes.find((episode: IEpisode): boolean => id === episode.id)! as IEpisode;
+  let inFavEpisode = favorites.includes(favEpisode);
 
   if (inFavEpisode) {
     const episodesWithoutFav = favorites.filter((favEpisode: IEpisode): boolean => favEpisode.id !== id);
@@ -21,7 +17,5 @@ export const toggleFavAction = ([{ episodes, favorites }, dispatch]: TStore) => 
     return;
   }
 
-  if (favEpisode) {
-    dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
-  }
+  dispatch({ type: ActionTypes.ADD_FAV, payload: favEpisode });
 };
